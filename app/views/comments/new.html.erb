@@ -1,0 +1,8 @@
+<h1>New comment</h1>
+
+
+
+<%= render :partial => @comment, 
+  :locals => { :button_name => "Create"} %>
+
+<%= link_to 'Back', opinion_comments_path(@opinion) %>

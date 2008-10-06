@@ -1,0 +1,24 @@
+<h1>New opinion</h1>
+
+<%= error_messages_for :opinion %>
+
+<% form_for(@opinion) do |f| %>
+  <p>
+    <b>Description</b><br />
+    <%= f.text_area :description, :columns => 75, :rows => 7 %>
+  </p>
+
+  <p>
+    <b>Type</b><br />
+     <%= f.select( :kind, { "Went Well" => 'W', "Not so well" => 'N'} ) %>
+  </p>  
+<p>
+    <b>Department</b><br />
+     <%= f.select( :dept, (Opinion::DEPTS.sort{|v1,v2| v1[1] <=> v2[1]}.collect{|k| [k[0],k[1] ]}), {:selected=> "#{session[:filter]}"} )  %>
+  </p>
+  <p>
+    <%= f.submit "Create" %>
+  </p>
+<% end %>
+
+<%= link_to 'Cancel', opinions_path, :from => "cancel" %>

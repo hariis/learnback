@@ -1,0 +1,77 @@
+<div id="filter">
+<% form_tag opinions_path, :method => 'get' do %>
+    <p>   
+    <b>Department:</b><br />
+     <%= select_tag( :filter, options_for_select(@depts.sort{|v1,v2| v1[1] <=> v2[1]}.collect{|k| [k[0],k[1] ]}, "#{@filter}" ) ) %> 
+    <%= submit_tag "Filter", :name => nil %>
+  </p>
+<% end %>
+</div>
+<div id="search">
+<% form_tag search_opinions_path, :method => 'get' do %>
+    <p>   
+    <b>Keyword Search:</b><br />
+     <%= text_field_tag :tag,"", {:size => 30,:maxlength => 30}  %> 
+    <%= submit_tag "Search" %><br/>
+        <span style="font-size: 80%">Note: One keyword at a time.<br/>
+        Spaces allowed in the keyword</span>
+  </p>
+<% end %>
+</div>
+<div class="addnew">
+ <%= button_to "Add New Opinion", new_opinion_path %>
+</div>
+<h1>Went well  <%= @filter_string %> </h1> <%= link_to ">>Show All", show_all_opinions_url(:filter => "#{@filter}",:kind => "W") %>
+
+<table>
+  <tr>  
+    <th style="width:50px;" class = "table-header">ID</th>
+    <th style="width:700px;" class = "table-header">Description</th>
+    
+    <th style="width:100px;" class = "table-header">Votes</th>
+   <th  style="width:150px;" class = "table-header">Comments</th>
+  </tr>
+
+<% for opinion in @went_well_opinions %>
+  <tr  valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+      <td><%= opinion.id %></td>
+       <td class ="op-desc"><%= link_to opinion.description, opinion %></td>
+    
+    <td><%= link_to "#{opinion.votes}", opinion %></td>
+    <td><%= link_to "#{opinion.comments.size}", opinion %></td>
+  </tr>
+<% end %>
+</table>
+<div>
+<p>
+<%= will_paginate @went_well_opinions %>
+</p>
+</div>
+
+<h1>Not so well <%= @filter_string %> </h1><%= link_to ">>Show All", show_all_opinions_url(:filter => "#{@filter}",:kind => "N") %>
+
+<table>
+  <tr>    
+    <th style="width:50px;" class = "table-header">ID</th>
+    <th style="width:700px;" class = "table-header">Description</th>
+    
+    <th style="width:100px;" class = "table-header">Votes</th>
+   <th  style="width:150px;" class = "table-header">Comments</th>
+  </tr>
+
+<% for opinion in@not_well_opinions %>
+  <tr  valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+       <td><%= opinion.id %></td>
+        <td class ="op-desc"><%= link_to opinion.description, opinion %></td>
+    
+    <td><%= link_to "#{opinion.votes}", opinion %></td>
+    <td><%= link_to "#{opinion.comments.size}", opinion %></td> 
+  </tr>
+<% end %>
+</table>
+
+<p>
+<%= will_paginate @not_well_opinions %>
+</p>
+
+

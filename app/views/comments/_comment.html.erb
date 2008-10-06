@@ -1,0 +1,16 @@
+<%#
+# To change this template, choose Tools | Templates
+# and open the template in the editor.
+%>
+<%= error_messages_for :comment %>
+<% form_for([@opinion,@comment]) do |f| %>
+
+  <p>
+    <b></b><br />
+    <%= f.text_area :body, :columns => 75, :rows => 7 %>
+  </p>
+
+  <p>
+    <%= f.submit button_name %>
+  </p>
+<% end %>

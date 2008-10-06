@@ -1,0 +1,8 @@
+<p>
+  <b>Comment:</b>
+  <%=h @comment.body %>
+</p>
+
+
+<%= link_to 'Edit', [:edit, @opinion, comment]  %> |
+<%= link_to 'Back', opinion_comments_path(@opinion) %>

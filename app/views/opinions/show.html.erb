@@ -1,0 +1,78 @@
+<div id="op-details" style = "background-color: #0077BB; padding: 2px 20px;" >
+<p>
+  <b>Description:</b>
+  <%=h @opinion.description %>
+</p>
+
+<p>
+  <b>Type:</b>
+  <%=  "Went Well" if @opinion.kind == "W" %>
+  <%=  "Not so Well" if @opinion.kind == "N" %>
+</p>
+
+<p>
+  <b>Dept:</b>
+  <%=  @dept_string %>
+</p>
+<p>
+  <b>Submitted by:</b>
+  <%= @opinion.user.login %>
+</p>
+<p>
+  <b>Created at:</b>
+  <%= @opinion.created_at.to_s(:long) %>
+</p>   
+<p>
+  <b>Updated at:</b>
+  <%= @opinion.updated_at.to_s(:long) %>
+</p>
+</div>
+<div id="vote-details">
+    <p>
+      <b>Total Votes</b>
+      <div id="totalvotes">
+      <%= @opinion.votes %>
+      </div>
+    </p>
+
+
+    <div id="vote">
+    <% if @opinion.is_eligible_to_vote(current_user.login)  %>
+    <p>
+     <%= link_to_remote "Add My Vote", :url => {:action => 'voteup', :id => @opinion} %>
+    </p>
+    <% end %>
+    </div>
+
+</div>
+<% if @opinion.voters != nil %>
+<div id="voters">
+  <b>Voters:</b><br/>
+<%= @opinion.voters.collect{|t| t}.join("," )%>
+</div>
+<% end %>
+<div id="list-comments">
+<!-- #1 -->
+<% unless @opinion.comments.empty? %>
+  <h3 style = "background-color: #60A4FF;padding:2px;">Comments</h3>
+  <% @index = 1 %>
+  <% @opinion.comments.each do |comment| %>
+    <p><%= @index %>. <%= h comment.body %><span style="color: black; font-weight: bold;margin-left:50px;"> by <%= comment.user.login %></span></p>
+  <% @index = @index+1 %>
+  <% end %>
+<% end %>
+</div>
+
+<div id="new-comment">
+<h3 style = "background-color: #60A4D3;padding:2px;">Add your Comment</h3>
+<%= render :partial => @comment = (flash[:comment] || Comment.new) , 
+   :locals => { :button_name => 'Add'}%>
+
+</div>
+<% if is_owner? || is_admin %>
+      <%= link_to 'Edit Opinion', edit_opinion_path(@opinion) %>|
+<% end %>
+<% if (is_owner? || is_admin) && @opinion.votes == 0 && @opinion.comments.empty? %>
+      <%= link_to 'Delete', @opinion, :confirm => 'Are you sure?', :method => :delete %> |
+<% end %>
+<%= link_to 'Back to Listings', opinions_path %>

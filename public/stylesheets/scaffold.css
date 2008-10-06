@@ -1,0 +1,153 @@
+body { background-color: #fff; color: #0077BB; }
+
+body, p, ol, ul, td {
+  font-family: Verdana,Arial,Helvetica,sans-serif;
+ line-height: 18px;
+}
+
+pre {
+  background-color: #eee;
+  padding: 10px;
+  font-size: 11px;
+}
+
+a { color: #ffffff; }
+a:visited { color: #ffffff; }
+a:hover { color: #ff0000;  }
+
+.fieldWithErrors {
+  padding: 2px;
+  background-color: red;
+  display: table;
+}
+
+#errorExplanation {
+  width: 400px;
+  border: 2px solid red;
+  padding: 7px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+}
+
+#errorExplanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
+  margin: -7px;
+  background-color: #c00;
+  color: #fff;
+}
+
+#errorExplanation p {
+  color: #333;
+  margin-bottom: 0;
+  padding: 5px;
+}
+
+#errorExplanation ul li {
+  font-size: 12px;
+  list-style: square;
+}
+
+div.uploadStatus {
+  margin: 5px;
+}
+
+div.progressBar {
+  margin: 5px;
+}
+
+div.progressBar div.border {
+  background-color: #fff;
+  border: 1px solid gray;
+  width: 100%;
+}
+
+div.progressBar div.background {
+  background-color: #333;
+  height: 18px;
+  width: 0%;
+}
+#contents {
+background-color: #0077BB;
+margin: 50px 150px;
+color:#ffffff;
+padding:10px;
+width:70%;
+}
+th, td {
+padding:2px;
+text-align:center;
+line-height: 1.5em;
+}
+
+#header {
+height: 50px;
+}
+#logo {
+float: left;
+padding-top:5px;
+}
+#actions{
+float: right;
+background:  #60A4FF;
+padding: 0px 20px;
+}
+
+#actions ul li {
+display:inline; 
+list-style-type:none; 
+}
+.table-header{
+background-color:#ffffff;
+color:#0077BB;
+}
+#vote-details{
+float: left; 
+background-color: #60A4FF;
+color:green;
+padding: 10px 30px;
+text-align:center;
+width: 20%;
+}
+#voters{
+float:right;
+background-color: #60A4FF;
+color:green;
+margin-left:20px;
+padding: 10px 30px;
+width: 50%;
+}
+#list-comments{
+clear:both;
+}
+#totalvotes{
+font-size:20pt;
+
+    font-weight: bold;
+}
+
+.list-line-even {
+  background:  #60A4FF;
+}
+
+.list-line-odd {
+  background:   #60A4D3;
+}
+.op-desc a {
+text-decoration: none;
+}
+.op-desc{
+text-align:left;
+}
+#search{
+float:right;
+}
+#filter{
+float: left;
+}
+.addnew{
+clear:both;
+}

@@ -1,0 +1,22 @@
+<h1>Search results for '<em><%= @keywords %></em>' </h1>
+<%= link_to "<< Back to Main Page", opinions_path %>
+
+<table>
+  <tr>  
+    <th style="width:50px;" class = "table-header">ID</th>
+    <th style="width:700px;" class = "table-header">Description</th>
+    
+    <th style="width:100px;" class = "table-header">Votes</th>
+   <th  style="width:150px;" class = "table-header">Comments</th>
+  </tr>
+
+<% for opinion in @opinions %>
+  <tr  valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+      <td><%= opinion.id %></td>
+       <td class ="op-desc"><%= link_to opinion.description, opinion %></td>
+    
+    <td><%= link_to "#{opinion.votes}", opinion %></td>
+    <td><%= link_to "#{opinion.comments.size}", opinion %></td>
+  </tr>
+<% end %>
+</table>
