@@ -1,6 +1,9 @@
-<h1><%=  "Went Well" if @kind == "W" %>
-<%=  "Not so Well" if @kind == "N" %>
-<%= @filter_string %> </h1> <%= link_to "<< Back to Main Page", opinions_path %>
+<% if @kind == "N" %>
+<div class="section-header not-so-well-title">Not so well - <%= @filter_string %> </div>
+<% else %>
+<div class="section-header went-well-title">Went well - <%= @filter_string %> </div>  
+<% end %> 
+<%= link_to "<< Back to Main Page", opinions_path %>
 
 <table>
   <tr>  
@@ -21,4 +24,4 @@
   </tr>
 <% end %>
 </table>
-
+<%= link_to "<< Back to Main Page", opinions_path %>

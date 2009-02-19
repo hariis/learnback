@@ -7,6 +7,7 @@ class CreateOpinions < ActiveRecord::Migration
       t.integer :votes, :default => 0
       t.text :voters
       t.references :user
+      t.references :project
       
       t.timestamps
     end

@@ -1,12 +1,16 @@
 class OpinionsController < ApplicationController
   before_filter :login_required , :except => :index
+  before_filter :load_project
   #before_filter :authenticate
   layout "application"
   # GET /opinions
   # GET /opinions.xml
-  
-  def index
-    
+  def load_project
+    project_id = params[:project_id] ? params[:project_id] : session[:project_id]
+    project_id = project_id ? project_id : "1"    
+    @project = Project.find(project_id)
+  end
+  def index      
             #Get page to display
             pagenum = params[:page] ? params[:page] : session[:page]
             pagenum = pagenum ? pagenum : "1"
@@ -21,26 +25,28 @@ class OpinionsController < ApplicationController
             else
               @filter = params[:filter] ? params[:filter] : session[:filter]
               @filter = @filter ? @filter : "1"
-              pagenum = 1 if params[:filter] != session[:filter]        
+              pagenum = 1 if params[:filter] && (params[:filter] != session[:filter] )  
+              pagenum = 1 if params[:project_id] && (params[:project_id] != session[:project_id] )               
             end
             if @filter == "7"              
-              @went_well_opinions = Opinion.searchw_by_user( pagenum,current_user)
-              @not_well_opinions =  Opinion.searchn_by_user( pagenum,current_user)
+              @went_well_opinions = @project.opinions.searchw_by_user( pagenum,current_user)
+              @not_well_opinions =  @project.opinions.searchn_by_user( pagenum,current_user)
             else
-               @went_well_opinions = Opinion.searchw( @filter, pagenum)
-               @not_well_opinions =  Opinion.searchn( @filter, pagenum)
+               @went_well_opinions = @project.opinions.searchw( @filter, pagenum)
+               @not_well_opinions =  @project.opinions.searchn( @filter, pagenum)
             end
            
-            @opinions = Opinion.find(:all,  :order => "updated_at desc")
+            @opinions = @project.opinions.find(:all,  :order => "updated_at desc")
 
             #This is for display
              @depts = Opinion::DEPTS
+             @projects = Project.find(:all)             
              @filter_string = @depts.index(@filter)
 
             #Store the data
             session[:filter] = @filter
             session[:page] = pagenum
-            
+            session[:project_id] = @project.id.to_s
             #@ops_by_user = Opinion.search_all_by_user( "N" ,current_user )
             respond_to do |format|
               format.html # index.html.erb
@@ -52,7 +58,7 @@ class OpinionsController < ApplicationController
   # GET /opinions/1
   # GET /opinions/1.xml
   def show
-    @opinion = Opinion.find(params[:id])
+    @opinion = @project.opinions.find(params[:id])
     depts = Opinion::DEPTS
      @dept_string = depts.index(@opinion.dept)
     respond_to do |format|
@@ -65,20 +71,25 @@ class OpinionsController < ApplicationController
     @kind = params[:kind]
     
     if @filter == "7"              
-      @opinions = Opinion.search_all_by_user( @kind ,current_user )
+      @opinions = @project.opinions.search_all_by_user( @kind ,current_user )
     else
-       @opinions = Opinion.search_all( @filter, @kind  )
-    end
-            
+       @opinions = @project.opinions.search_all( @filter, @kind  )
+    end         
     
     @depts = Opinion::DEPTS
-    @filter_string = @depts.index(@filter)
+    @filter_string = @depts.index(@filter)    
+    @kind_string = @kind == "N" ? "Not so well" : "Went well"
+    
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  
+    end
   end
   def search
     @keywords = params[:tag]
     @opinions = []
-    if @keywords != nil
-        @opinions = Opinion.search( @keywords  )
+    if @keywords != nil && @keywords != ''
+        @opinions = @project.opinions.search( @keywords  )
     end
   end
   # GET /opinions/new
@@ -94,7 +105,7 @@ class OpinionsController < ApplicationController
 
   # GET /opinions/1/edit
   def edit
-    @opinion = Opinion.find(params[:id])
+    @opinion = @project.opinions.find(params[:id])
     @depts = Opinion::DEPTS
   end
 
@@ -102,7 +113,7 @@ class OpinionsController < ApplicationController
   # POST /opinions.xml
   def create
     @opinion = Opinion.new(params[:opinion])
-    
+    @opinion.project_id = @project.id
     respond_to do |format|
       if @current_user.opinions << @opinion
         flash[:notice] = 'Opinion was successfully created.'
@@ -119,7 +130,7 @@ class OpinionsController < ApplicationController
   # PUT /opinions/1
   # PUT /opinions/1.xml
   def update
-    @opinion = Opinion.find(params[:id])
+    @opinion = @project.opinions.find(params[:id])
 
     respond_to do |format|
       if @opinion.update_attributes(params[:opinion])
@@ -137,7 +148,7 @@ class OpinionsController < ApplicationController
   # DELETE /opinions/1
   # DELETE /opinions/1.xml
   def destroy
-    @opinion = Opinion.find(params[:id])
+    @opinion = @project.opinions.find(params[:id])
     @opinion.destroy
 
     respond_to do |format|
@@ -147,7 +158,7 @@ class OpinionsController < ApplicationController
   end
   
   def voteup
-     @opinion = Opinion.find(params[:id])
+     @opinion = @project.opinions.find(params[:id])
      current_votes = @opinion.votes
       @opinion.update_attribute(:votes, current_votes + 1)
       @opinion.record_voter(current_user.login)
@@ -157,11 +168,7 @@ class OpinionsController < ApplicationController
   def authenticate
       case request.format
       when Mime::XML, Mime::ATOM
-            if user = authenticate_with_http_basic { |name, pass| User.authenticate(name, pass) }
-                        #@current_user = user
-            else
-                        request_http_basic_authentication
-            end
+            authenticate__or_request_with_http_basic { |name, pass| User.authenticate(name, pass) }             
       else
             login_required #if action_name != 'index' 
             if logged_in?

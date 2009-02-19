@@ -1,4 +1,4 @@
-<div id="op-details" style = "background-color: #0077BB; padding: 2px 20px;" >
+<div id="op-details" style = "padding: 2px 20px;" >
 <p>
   <b>Description:</b>
   <%=h @opinion.description %>
@@ -16,7 +16,7 @@
 </p>
 <p>
   <b>Submitted by:</b>
-  <%= @opinion.user.login %>
+  <%= @opinion.user.login.capitalize %>
 </p>
 <p>
   <b>Created at:</b>
@@ -48,7 +48,7 @@
 <% if @opinion.voters != nil %>
 <div id="voters">
   <b>Voters:</b><br/>
-<%= @opinion.voters.collect{|t| t}.join("," )%>
+<%= @opinion.voters.collect{|t| t.capitalize}.join("," )%>
 </div>
 <% end %>
 <div id="list-comments">
@@ -64,15 +64,15 @@
 </div>
 
 <div id="new-comment">
-<h3 style = "background-color: #60A4D3;padding:2px;">Add your Comment</h3>
+<h3 style = "background-color: #888302;padding:5px;color:#ffffff;">Add your Comment</h3>
 <%= render :partial => @comment = (flash[:comment] || Comment.new) , 
    :locals => { :button_name => 'Add'}%>
 
 </div>
-<% if is_owner? || is_admin %>
-      <%= link_to 'Edit Opinion', edit_opinion_path(@opinion) %>|
+<% if is_owner? || is_admin? %>
+      <%= link_to 'Edit Opinion', edit_opinion_path(@opinion) %> |
 <% end %>
-<% if (is_owner? || is_admin) && @opinion.votes == 0 && @opinion.comments.empty? %>
+<% if (is_owner? || is_admin?) && @opinion.votes == 0 && @opinion.comments.empty? %>
       <%= link_to 'Delete', @opinion, :confirm => 'Are you sure?', :method => :delete %> |
 <% end %>
 <%= link_to 'Back to Listings', opinions_path %>

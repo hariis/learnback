@@ -1,9 +1,19 @@
-<div id="filter">
+
+<div id="filter-dept">
 <% form_tag opinions_path, :method => 'get' do %>
     <p>   
     <b>Department:</b><br />
      <%= select_tag( :filter, options_for_select(@depts.sort{|v1,v2| v1[1] <=> v2[1]}.collect{|k| [k[0],k[1] ]}, "#{@filter}" ) ) %> 
     <%= submit_tag "Filter", :name => nil %>
+  </p>
+<% end %>
+</div>
+<div id="filter-project">
+<% form_tag opinions_path, :method => 'get' do %>
+    <p>   
+    <b>Project:</b><br />
+     <%= select_tag( :project_id, options_for_select(@projects.collect{|k| [k.title,k.id.to_s ]}, "#{@project.id.to_s}" ) ) %> 
+    <%= submit_tag "Change", :name => nil %>
   </p>
 <% end %>
 </div>
@@ -18,10 +28,13 @@
   </p>
 <% end %>
 </div>
-<div class="addnew">
- <%= button_to "Add New Opinion", new_opinion_path %>
-</div>
-<h1>Went well  <%= @filter_string %> </h1> <%= link_to ">>Show All", show_all_opinions_url(:filter => "#{@filter}",:kind => "W") %>
+
+<div class="section-header went-well-title">
+<span class="section-header-text">Went well - <%= @filter_string %></span>
+<span class="show-all"><%= link_to ">>Show All", show_all_opinions_url(:filter => "#{@filter}",:kind => "W") %>
+<%= link_to image_tag("xmlicon.jpg", :size => "30x12", :alt => "XML version"), show_all_opinions_url(:filter => "#{@filter}",:kind => "W", :format => 'xml') if logged_in? && is_admin? %>
+</span>
+</div> 
 
 <table>
   <tr>  
@@ -48,7 +61,12 @@
 </p>
 </div>
 
-<h1>Not so well <%= @filter_string %> </h1><%= link_to ">>Show All", show_all_opinions_url(:filter => "#{@filter}",:kind => "N") %>
+<div class="section-header not-so-well-title">
+<span class="section-header-text">Not so well - <%= @filter_string %></span>
+<span class="show-all"><%= link_to ">>Show All", show_all_opinions_url(:filter => "#{@filter}",:kind => "N") %>
+<%= link_to image_tag("xmlicon.jpg", :size => "30x12", :alt => "XML version"), show_all_opinions_url(:filter => "#{@filter}",:kind => "N", :format => 'xml') if logged_in? && is_admin?%>
+</span>
+</div> 
 
 <table>
   <tr>    
@@ -60,7 +78,7 @@
   </tr>
 
 <% for opinion in@not_well_opinions %>
-  <tr  valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+  <tr  valign="top" class="<%= cycle('list-line-odd-ns', 'list-line-even-ns') %>">
        <td><%= opinion.id %></td>
         <td class ="op-desc"><%= link_to opinion.description, opinion %></td>
     

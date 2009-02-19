@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :projects, :has_many => :opinions
+
   map.root :controller => 'opinions'
   map.resources :opinions, :has_many => :comments, :collection => {:show_all => :get, :search => :get}
   map.resources :users

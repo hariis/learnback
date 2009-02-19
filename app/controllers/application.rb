@@ -8,4 +8,7 @@ class ApplicationController < ActionController::Base
   # Uncomment the :secret if you're not using the cookie session store
   protect_from_forgery # 
   
+  def is_admin?
+    current_user.admin?
+  end
 end

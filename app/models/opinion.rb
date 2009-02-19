@@ -1,6 +1,7 @@
 class Opinion < ActiveRecord::Base
   has_many :comments
   belongs_to :user
+  belongs_to :project
   
   validates_presence_of :description , :message => "Description can't be blank"
   serialize :voters
@@ -16,15 +17,15 @@ class Opinion < ActiveRecord::Base
              update_attribute(:voters , allvoters)
          end
   end
-  def is_eligible_to_vote(user)         
-         if voters
-           allvoters = voters
+  def is_eligible_to_vote(logged_user) 
+         return false if self.user.login == logged_user 
+         return true if voters == nil          
+         if voters.include?(logged_user) 
+            return false 
          else
-           return true
+            return true
          end
          
-         return false if allvoters.include?(user) 
-         return true
   end
   def self.searchw(filter, page)       
         paginate :per_page =>5, :page => page,
@@ -48,12 +49,12 @@ class Opinion < ActiveRecord::Base
    end
    def self.search_all(filter,kind)
      Opinion.find(:all, :conditions => ['dept = ? and kind =?', filter, kind ],
-                                                     :order => "created_at desc" )
+                                                     :order => "created_at desc", :include =>[:comments,:user] )
     
    end
    def self.search_all_by_user(kind,user)
      Opinion.find(:all, :conditions => ['kind =? and user_id = ?',  kind,user.id ],
-                                                     :order => "created_at desc" )
+                                                     :order => "created_at desc", :include =>[:comments,:user] )
     
    end
    def self.search(keyword)

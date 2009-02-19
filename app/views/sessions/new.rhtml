@@ -1,6 +1,6 @@
 <%= flash[:notice] %>
 <% if session[:user_id] == nil %>
-  <span style="color: yellow;">Please Signup first if you haven't already </span>
+  <span style="color: red;">Please Signup first if you don't have an account. </span>
 <% end %>
 <% form_tag session_path do -%>
 <p><label for="login">Login</label><br/>

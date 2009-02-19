@@ -12,19 +12,29 @@
 </head>
 <body>
   <div id="header">
-    <div id="logo"> <h1>LearnBack</h1><h6>a tool for gathering feedback</h6></div>
- 
+    <div id="logo"> <h1>LearnBack<h6>a tool for gathering feedback</h6></h1></div>
+   <div class="section-header project-title">
+        <% if (controller.controller_name == 'opinions') %>
+            Feedback for <%= @project.title %>  
+             <% if logged_in? && (@project.id == 1) %>
+                <div class="addnew">
+                 <%= button_to "Add New Opinion", new_opinion_path %>                
+                </div>               
+            <% end %>
+        <% end %>
+    </div>
   <div id="actions">
      <% if logged_in?   %>
-            <ul><li>Welcome <%= current_user.login %>  | </li> <li><%= link_to 'Logout', "/logout" %></li></ul>
-            <%= "Role: Admin" if current_user.admin? %>
+       <ul><li><%= link_to 'Home', opinions_path %></li> | <li>Welcome <em><b><%= current_user.login.capitalize %></b></em></li> | <li><%= link_to 'Logout', "/logout" %></li></ul>
+       <ul><li><%= "Role: Admin" if current_user.admin? %></li><li><%= link_to " | Add New Project", new_project_path if current_user.admin? %></li></ul>     
+            
     <% else %>
           <ul><li><%= link_to 'Signup', "/signup" %>  | </li> <li><%= link_to 'Login', "/login" %></li></ul>
     <% end %>
     
   </div>
 </div>
-<br/>
+
 <p style="color: green"><%= flash[:notice] %></p>
 <div id="contents">
 <%= yield  %>
